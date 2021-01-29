@@ -1,0 +1,8 @@
+<h1>投稿フォーム</h1>
+<%= form_with model:@post do |f| %>
+    <div class="field">
+        <%= f.label :body %>
+        <%= f.text_field :body %>
+    </div>
+    <%= f.submit %>
+<% end %>

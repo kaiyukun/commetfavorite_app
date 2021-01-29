@@ -1,0 +1,29 @@
+<h1>Post詳細</h1>
+<div class="show">
+    <%= @post.body %>
+    <%= @post.created_at %>
+</div>
+<% if user_signed_in? %>
+    <% if @post.commented_by?(current_user) %>
+        <p>既にコメントしているためコメントできません。</p>
+    <% else %>
+        <%= form_with(model:[@post, @comment], local: true) do |f| %>
+            <%= f.text_field :content %>
+            <%= f.submit %>
+        <% end %>
+    <% end %>
+<% end %>
+<p>コメント一覧</p>
+    <% @comments.each do |c| %>
+        <div>
+        <%= c.user.email unless c.user.blank? %>
+        <br>
+        <%= c.content %>
+        <% if c.favorited_by?(current_user) %> <!-- ログインしているユーザーがファボしたかどうかで分岐 -->
+            <p><span>お気に入り解除: </span><%=link_to c.favorites.count, comment_favorites_path(c.id), method: :delete %></p>
+        <% else %>
+            <p><span>お気に入り登録: </span><%=link_to c.favorites.count, comment_favorites_path(c.id), method: :post %></p>
+        <% end %>
+        <%=link_to "削除", post_comments_path(c.post.id, c.id), method: :delete %>
+        </div>
+    <% end %>
